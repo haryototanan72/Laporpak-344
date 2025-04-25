@@ -35,8 +35,9 @@ class Kernel extends HttpKernel
     ];
 
     protected $routeMiddleware = [
-        'auth' => Authenticate::class,
-        'verified' => EnsureEmailIsVerified::class,
-        'admin' => RedirectIfNotAdmin::class,
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class, // <-- ini penting
     ];
+    
 }
