@@ -1,0 +1,96 @@
+/* Custom CSS for Track Report Timeline - Enhanced for Status Color */
+.track-timeline {
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    max-width: 380px;
+}
+.track-timeline-step {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    position: relative;
+}
+.track-timeline-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #233876;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #233876;
+    z-index: 2;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+.track-timeline-icon.active-blue {
+    background: #233876;
+    color: #fff;
+    border-color: #233876;
+}
+.track-timeline-icon.active-yellow {
+    background: #fbb03b;
+    color: #fff;
+    border-color: #fbb03b;
+}
+.track-timeline-line {
+    position: absolute;
+    left: 17px;
+    top: 36px;
+    width: 3px;
+    height: calc(100% - 36px);
+    background: #233876;
+    opacity: 0.2;
+    z-index: 1;
+    transition: background 0.2s;
+}
+.track-timeline-line.yellow {
+    background: #fbb03b;
+    opacity: 1;
+}
+.track-timeline-content {
+    margin-left: 20px;
+    flex: 1;
+}
+.track-timeline-title {
+    font-weight: 600;
+    color: #233876;
+    margin-bottom: 2px;
+    font-size: 1rem;
+}
+.track-timeline-title.yellow {
+    color: #fbb03b;
+}
+.track-timeline-desc {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+.track-timeline-step:last-child .track-timeline-line {
+    display: none;
+}
+
+.btn-kembali {
+    background: #6d7684;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 32px;
+    font-size: 1rem;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+}
+.btn-kembali:hover {
+    background: #49506c;
+    color: #fff;
+}
+
+@media (max-width: 500px) {
+    .track-timeline {
+        max-width: 100%;
+    }
+}

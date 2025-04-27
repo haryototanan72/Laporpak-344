@@ -26,6 +26,13 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // Cek status user setelah berhasil authenticate
+        $user = \App\Models\User::where('email', $request->email)->first();
+        if ($user && $user->status !== 'aktif') {
+            Auth::logout();
+            return redirect()->route('login')->withErrors(['email' => 'Akun kamu lagi ditangguhkan sementara, silakan hubungi kami.']);
+        }
+
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));

@@ -18,15 +18,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: Logis
@@ -50,27 +50,18 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="aa.html" class="active">Beranda<br></a></li>
-          <li><a href="aa.html">Statistik</a></li>
-          <li><a href="aa.html">FAQ</a></li>
-          <li><a href="aa.html">Kontak</a></li>
-          <!-- <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-            <ul>
-              <li><a href="#">Dropdown 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                <ul>
-                  <li><a href="#">Deep Dropdown 1</a></li>
-                  <li><a href="#">Deep Dropdown 2</a></li>
-                  <li><a href="#">Deep Dropdown 3</a></li>
-                  <li><a href="#">Deep Dropdown 4</a></li>
-                  <li><a href="#">Deep Dropdown 5</a></li>
-                </ul>
-              </li> -->
-              <!-- <li><a href="#">Dropdown 2</a></li>
-              <li><a href="#">Dropdown 3</a></li>
-              <li><a href="#">Dropdown 4</a></li> -->
-            <!-- </ul>
-          </li> -->
+          <li><a href="/" class="active">Beranda<br></a></li>
+          <li><a href="#statistik">Statistik</a></li>
+          <li><a href="/about.html">FAQ</a></li>
+          <li><a href="#contact">Kontak</a></li>
+          <li><a href="{{ route('track.show') }}" class="btn-get-started">Lacak Laporan</a></li>
+          @if (Route::has('login'))
+            @auth
+              <li><a href="{{ url('/dashboard/user') }}" class="btn-get-started">Dashboard</a></li>
+            @else
+              <li><a href="{{ route('login') }}" class="btn-get-started">Login</a></li>
+            @endauth
+          @endif
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -85,9 +76,9 @@
     <!-- landing Section -->
     <section id="landing" class="landing section dark-background">
 
-      <img src="assets/img/dashboard-1.png" alt="" class="landing-bg" data-aos="fade-in">
+      <img src="{{ asset('assets/img/dashboard-1.png') }}" alt="" class="landing-bg" data-aos="fade-in">
 
-      <section class="min-vh-100 d-flex align-items-center" style="background: url('your-background-image.jpg') center center / cover no-repeat;">
+      <section class="min-vh-100 d-flex align-items-center" style="background: url('{{ asset('assets/img/your-background-image.jpg') }}') center center / cover no-repeat;">
         <div class="container">
           <div class="row gy-4 d-flex justify-content-between">
             <div class="col-lg-8 d-flex flex-column justify-content-center text-white">
@@ -101,7 +92,7 @@
 
                 <!-- Tombol Lacak Laporanmu -->
                 <div class="mt-3" data-aos="fade-up" data-aos-delay="400">
-                  <a href="#" class="btn btn-danger text-white btn-lg px-4 py-2">
+                  <a href="{{ route('track.show') }}" class="btn btn-danger text-white btn-lg px-4 py-2">
                     <i class="bi bi-geo-alt-fill me-2"></i> Lacak Laporanmu
                   </a>                                 
                 </div>
@@ -164,102 +155,50 @@
 
     <!-- Statistik -->
     <section class="min-vh-100 d-flex align-items-center position-relative overflow-hidden" style="z-index: 0;">
-
       <!-- Gambar Background  -->
-      <img src="assets/img/dashboard-2.png" alt="" 
+      <img src="{{ asset('assets/img/dashboard-2.png') }}" alt="" 
           class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" 
-          style="z-index: 0;" data-aos="fade-in">
+          style="z-index: 0; opacity: 0.95;" data-aos="fade-in">
 
-      <!-- Konten di atas gambar -->
-      <div class="container position-relative" style="z-index: 1;">
-        <div class="row align-items-center">
-          <div class="col-md-12 text-center text-md-start">
-            <!-- Garis merah bergeser menggunakan position relative -->
-            <div class="mb-3 mx-auto mx-md-0" style="border-top: 4px solid #EB5757; width: 40px; position: relative; left: 100px;"></div>
-            <h2 class="fw-bold text-dark" style="padding-left: 100px;">Statistik<br>LaporPak</h2>
-      
-            <div class="row justify-content-center justify-content-md-start text-start mt-4" style="padding-left: 100px;">
-              <div class="col-6 col-md-1 mb-3">
-                <i class="bi bi-file-earmark-text-fill text-warning fs-2"></i>
-                <h5 class="fw-bold mb-0">1001</h5>
-                <small class="text-muted fs-6">Jumlah Laporan</small>
-              </div>
-              <div class="col-6 col-md-1 mb-3">
-                <i class="bi bi-list-task text-warning fs-2"></i>
-                <h5 class="fw-bold mb-0">489</h5>
-                <small class="text-muted fs-6">Baru</small>
-              </div>
-              <div class="col-6 col-md-1 mb-3">
-                <i class="bi bi-gear-fill text-warning fs-2"></i>
-                <h5 class="fw-bold mb-0">399</h5>
-                <small class="text-muted fs-6">Proses Verifikasi</small>
-              </div>
-              <div class="col-6 col-md-1 mb-3">
-                <i class="bi bi-file-earmark-check-fill text-warning fs-2"></i>
-                <h5 class="fw-bold mb-0">305</h5>
-                <small class="text-muted fs-6">Verifikasi</small>
-              </div>
-              <div class="col-6 col-md-1 mb-3">
-                <i class="bi bi-check2-square text-warning fs-2"></i>
-                <h5 class="fw-bold mb-0">798</h5>
-                <small class="text-muted fs-6">Penanganan Selesai</small>
-              </div>
-            </div>
-          </div>            
-        </div>
-      </div>      
-              
-    </section>
-
-
-    <!-- Kategori Laporan Section -->
-    <section id="kategori" class="min-vh-100 d-flex align-items-center position-relative overflow-hidden">
-  
-      <!-- Gambar Background -->
-      <img src="assets/img/dashboard-3.png" alt=""
-           class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
-           style="z-index: 0;" data-aos="fade-in" />
-    
-      <!-- Konten di atas gambar -->
-      <div class="container position-relative" style="z-index: 1;">
-        <div class="section-title text-md-start" data-aos="fade-up">
-          <h2>KATEGORI LAPORAN</h2>
-        </div>
-    
-        <div class="row justify-content-center gy-4">
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
-            <div class="card-kategori text-center shadow">
-              <i class="bi bi-search text-danger"></i>
-              <h5><a href="#">Lacak Laporanmu &gt;</a></h5>
-              <p>Sudah Melapor? Lacak menggunakan nomor laporan.</p>
-            </div>
+      <div class="container position-relative" style="z-index: 2;">
+        <div class="row">
+          <div class="col-lg-5 mb-4 mb-lg-0">
+            <h2 class="fw-bold" style="font-size:2.5rem; color:#232b44;">
+              <span style="border-bottom:4px solid #ffb300; display:inline-block; margin-bottom:10px;">Statistik</span><br>LaporPak
+            </h2>
           </div>
-    
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
-            <div class="card-kategori text-center shadow">
-              <i class="bi bi-graph-up text-purple"></i>
-              <h5><a href="#">Laporan Masuk &amp; Selesai &gt;</a></h5>
-              <p>Data Laporan Masuk Tahun 2025</p>
-            </div>
-          </div>
-    
-          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
-            <div class="card-kategori text-center shadow">
-              <i class="bi bi-clipboard-data text-primary"></i>
-              <h5><a href="#">Aktivitas Laporan &gt;</a></h5>
-              <p>Lihat Aktivitas Laporanmu</p>
+          <div class="col-lg-7">
+            <div class="d-flex flex-row flex-wrap justify-content-lg-start justify-content-center align-items-end gap-4">
+              <div class="stat-card text-center bg-white bg-opacity-75 shadow-sm p-3 rounded" style="width:140px; height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <i class="bi bi-file-earmark-text-fill" style="font-size:2.1rem; color:#ffb300; margin-bottom:10px;"></i>
+                <div class="fw-bold" style="font-size:1.7rem; color:#232b44; line-height:1;">{{ $totalLaporan }}</div>
+                <div class="small mt-1" style="color:#232b44;">Total</div>
+              </div>
+              <div class="stat-card text-center bg-white bg-opacity-75 shadow-sm p-3 rounded" style="width:140px; height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <i class="bi bi-calendar-check" style="font-size:2.1rem; color:#ffb300; margin-bottom:10px;"></i>
+                <div class="fw-bold" style="font-size:1.7rem; color:#232b44; line-height:1;">{{ $laporanBulanIni }}</div>
+                <div class="small mt-1" style="color:#232b44;">Baru</div>
+              </div>
+              <div class="stat-card text-center bg-white bg-opacity-75 shadow-sm p-3 rounded" style="width:140px; height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <i class="bi bi-check2-square" style="font-size:2.1rem; color:#ffb300; margin-bottom:10px;"></i>
+                <div class="fw-bold" style="font-size:1.7rem; color:#232b44; line-height:1;">{{ $selesaiComplaint }}</div>
+                <div class="small mt-1" style="color:#232b44;">Selesai</div>
+              </div>
+              <div class="stat-card text-center bg-white bg-opacity-75 shadow-sm p-3 rounded" style="width:140px; height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <i class="bi bi-gear-fill" style="font-size:2.1rem; color:#ffb300; margin-bottom:10px;"></i>
+                <div class="fw-bold" style="font-size:1.7rem; color:#232b44; line-height:1;">{{ $prosesComplaint }}</div>
+                <div class="small mt-1" style="color:#232b44;">Proses</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>    
-   <!-- /Kategori Laporan Section -->
-
+    </section>
 
     <!-- Peta -->
     <section id="peta" class="peta section dark-background">
       <div class="background-overlay">
-        <img src="assets/img/peta.png" alt="Peta Indonesia" class="peta-img">
+        <img src="{{ asset('assets/img/peta.png') }}" alt="Peta Indonesia" class="peta-img">
       </div>
       <div class="container">
         <div class="row justify-content-start">
@@ -275,123 +214,129 @@
     </section>    
     <!-- /end Peta -->
 
-    <!-- News Section -->
-<section id="news" class="py-5">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4 class="fw-bold">Recent Posts</h4>
-      <a href="#" class="btn btn-sm btn-outline-secondary">VIEW ALL <i class="bi bi-arrow-up-right"></i></a>
-    </div>
-    <div class="row">
-      <!-- Left side (main posts) -->
-      <div class="col-lg-8">
-        <div class="row g-3">
-          <div class="col-md-4">
-            <div class="card bg-dark text-white">
-              <img src="assets/img/news1.jpg" class="card-img" alt="...">
-              <div class="card-img-overlay d-flex flex-column justify-content-end">
-                <h6 class="card-title fw-bold">Perbaikan Bahu Jalan Kab. Bandung</h6>
-                <p class="card-text"><i class="bi bi-calendar"></i> 27 August, 2024</p>
+    <!-- Recent Posts Section -->
+    <section id="recent-posts" class="py-5" style="background:#fff;">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="fw-bold" style="color:#232b44;">Recent Posts</h3>
+          <a href="#" class="btn btn-outline-secondary btn-sm fw-bold">VIEW ALL <i class="bi bi-arrow-up-right"></i></a>
+        </div>
+        <div class="row">
+          <!-- Main Posts -->
+          <div class="col-lg-8">
+            <div class="row g-3">
+              @foreach(($laporanTerbaru ?? []) as $laporan)
+                <div class="col-md-4">
+                  <div class="card bg-dark text-white h-100">
+                    <img src="{{ asset('assets/img/news1.jpg') }}" class="card-img" alt="">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end p-2">
+                      <h6 class="card-title fw-bold mb-1" style="font-size:1rem;">{{ $laporan->judul ?? '-' }}</h6>
+                      <p class="card-text mb-0" style="font-size:0.85rem;"><i class="bi bi-calendar"></i> {{ $laporan->created_at ? $laporan->created_at->format('d M Y') : '-' }}</p>
+                    </div>
+                  </div>
+                </div>
+              @endforeach
+              @if(empty($laporanTerbaru) || count($laporanTerbaru) < 3)
+                @for($i = (count($laporanTerbaru ?? [])); $i < 3; $i++)
+                <div class="col-md-4">
+                  <div class="card bg-dark text-white h-100">
+                    <img src="{{ asset('assets/img/news'.($i+1).'.jpg') }}" class="card-img" alt="">
+                    <div class="card-img-overlay d-flex flex-column justify-content-end p-2">
+                      <h6 class="card-title fw-bold mb-1" style="font-size:1rem;">Lorem Ipsum Is Simply Dummy Text</h6>
+                      <p class="card-text mb-0" style="font-size:0.85rem;"><i class="bi bi-calendar"></i> 27 August, 2024</p>
+                    </div>
+                  </div>
+                </div>
+                @endfor
+              @endif
+            </div>
+            <div class="row g-3 mt-2">
+              @for($i = 0; $i < 2; $i++)
+              <div class="col-md-6">
+                <div class="card bg-dark text-white h-100">
+                  <img src="{{ asset('assets/img/news'.($i+4).'.jpg') }}" class="card-img" alt="">
+                  <div class="card-img-overlay d-flex flex-column justify-content-end p-2">
+                    <h6 class="card-title fw-bold mb-1" style="font-size:1rem;">Lorem Ipsum Is Simply Dummy Text Of The Printing</h6>
+                    <p class="card-text mb-0" style="font-size:0.85rem;"><i class="bi bi-calendar"></i> 27 August, 2024 <i class="bi bi-clock ms-2"></i> 20 mins</p>
+                  </div>
+                </div>
               </div>
+              @endfor
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="card bg-dark text-white">
-              <img src="assets/img/news2.jpg" class="card-img" alt="...">
-              <div class="card-img-overlay d-flex flex-column justify-content-end">
-                <h6 class="card-title">Lorem Ipsum Is Simply Dummy Text</h6>
-                <p class="card-text"><i class="bi bi-calendar"></i> 27 August, 2024</p>
+          <!-- Sidebar News List -->
+          <div class="col-lg-4">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="badge bg-danger fw-bold">Latest News</span>
+              <button class="btn btn-light btn-sm fw-bold">Featured</button>
+            </div>
+            @for($i = 0; $i < 4; $i++)
+            <div class="d-flex mb-3 align-items-center">
+              <img src="{{ asset('assets/img/news'.($i+6).'.jpg') }}" width="80" height="60" class="me-2 object-fit-cover rounded" alt="">
+              <div>
+                <p class="mb-1 small fw-bold" style="color:#232b44;">Lorem Ipsum Is Simply Dummy Text</p>
+                <small class="text-muted"><i class="bi bi-calendar"></i> 27 August, 2024</small>
               </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card bg-dark text-white">
-              <img src="assets/img/news3.jpg" class="card-img" alt="...">
-              <div class="card-img-overlay d-flex flex-column justify-content-end">
-                <h6 class="card-title">Lorem Ipsum Is Simply Dummy Text</h6>
-                <p class="card-text"><i class="bi bi-calendar"></i> 27 August, 2024</p>
-              </div>
-            </div>
-          </div>
-          <!-- More posts -->
-          <div class="col-md-6">
-            <div class="card bg-dark text-white">
-              <img src="assets/img/news4.jpg" class="card-img" alt="...">
-              <div class="card-img-overlay d-flex flex-column justify-content-end">
-                <h6 class="card-title">Lorem Ipsum Is Simply Dummy Text Of The Printing</h6>
-                <p class="card-text">
-                  <i class="bi bi-calendar"></i> 27 August, 2024
-                  <i class="bi bi-clock ms-2"></i> 20 mins
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card bg-dark text-white">
-              <img src="assets/img/news5.jpg" class="card-img" alt="...">
-              <div class="card-img-overlay d-flex flex-column justify-content-end">
-                <h6 class="card-title">Lorem Ipsum Is Simply Dummy Text Of The Printing</h6>
-                <p class="card-text">
-                  <i class="bi bi-calendar"></i> 27 August, 2024
-                  <i class="bi bi-clock ms-2"></i> 20 mins
-                </p>
-              </div>
-            </div>
+            @endfor
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Right side (sidebar news list) -->
-      <div class="col-lg-4">
-        <div class="d-flex justify-content-between mb-3">
-          <button class="btn btn-danger btn-sm fw-bold">Latest News</button>
-          <button class="btn btn-light btn-sm fw-bold">Featured</button>
-        </div>
-        <div class="d-flex mb-3">
-          <img src="assets/img/news6.jpg" width="100" height="80" class="me-2 object-fit-cover" alt="">
-          <div>
-            <p class="mb-1 small">Lorem Ipsum Is Simply Dummy Text</p>
-            <small><i class="bi bi-calendar"></i> 27 August, 2024</small>
-          </div>
-        </div>
-        <div class="d-flex mb-3">
-          <img src="assets/img/news7.jpg" width="100" height="80" class="me-2 object-fit-cover" alt="">
-          <div>
-            <p class="mb-1 small">Lorem Ipsum Is Simply Dummy Text</p>
-            <small><i class="bi bi-calendar"></i> 27 August, 2024</small>
-          </div>
-        </div>
-        <div class="d-flex mb-3">
-          <img src="assets/img/news8.jpg" width="100" height="80" class="me-2 object-fit-cover" alt="">
-          <div>
-            <p class="mb-1 small">Lorem Ipsum Is Simply Dummy Text</p>
-            <small><i class="bi bi-calendar"></i> 27 August, 2024</small>
-          </div>
-        </div>
-        <div class="d-flex mb-3">
-          <img src="assets/img/news9.jpg" width="100" height="80" class="me-2 object-fit-cover" alt="">
-          <div>
-            <p class="mb-1 small">Lorem Ipsum Is Simply Dummy Text</p>
-            <small><i class="bi bi-calendar"></i> 27 August, 2024</small>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-<!-- end news -->
+    <!-- Kategori Laporan Section -->
+    <section id="kategori" class="min-vh-100 d-flex align-items-center position-relative overflow-hidden">
+  
+      <!-- Gambar Background -->
+      <img src="{{ asset('assets/img/dashboard-3.png') }}" alt=""
+           class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+           style="z-index: 0;" data-aos="fade-in" />
     
+      <!-- Konten di atas gambar -->
+      <div class="container position-relative" style="z-index: 1;">
+        <div class="section-title text-md-start" data-aos="fade-up">
+          <h2>KATEGORI LAPORAN</h2>
+        </div>
+    
+        <div class="row justify-content-center gy-4">
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
+            <div class="card-kategori text-center shadow">
+              <i class="bi bi-search text-danger"></i>
+              <h5><a href="{{ route('laporan.masuk') }}">Lacak Laporanmu &gt;</a></h5>
+              <p>Sudah Melapor? Lacak menggunakan nomor laporan.</p>
+            </div>
+          </div>
+    
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+            <div class="card-kategori text-center shadow">
+              <i class="bi bi-graph-up text-purple"></i>
+              <h5><a href="{{ route('laporan.masuk') }}">Laporan Masuk &amp; Selesai &gt;</a></h5>
+              <p>Data Laporan Masuk Tahun 2025</p>
+            </div>
+          </div>
+    
+          <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
+            <div class="card-kategori text-center shadow">
+              <i class="bi bi-clipboard-data text-primary"></i>
+              <h5><a href="{{ route('laporan.masuk') }}">Aktivitas Laporan &gt;</a></h5>
+              <p>Lihat Aktivitas Laporanmu</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>    
+   <!-- /Kategori Laporan Section -->
 
-<!-- Video -->
-    <section id="about" class="video" style="background-image: url('assets/img/video1.png'); background-size: cover; background-position: center;">
+
+    <!-- Video -->
+    <section id="about" class="video" style="background-image: url('{{ asset('assets/img/video1.png') }}'); background-size: cover; background-position: center;">
 
       <div class="container">
         <div class="row gy-4">
 
           <!-- Gambar + Play Button -->
           <div class="col-lg-6 position-relative align-self-start order-lg-last order-first" data-aos="fade-up" data-aos-delay="200">
-            <img src="assets/img/video2.png" class="img-fluid rounded" alt="">
+            <img src="{{ asset('assets/img/video2.png') }}" class="img-fluid rounded" alt="">
             <a href="https://www.youtube.com/watch?v=cd940jePm3Y" class="glightbox pulsating-play-btn"></a>
           </div>
 
@@ -439,15 +384,15 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
+  <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
+  <script src="{{ asset('assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+  <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script src="{{ asset('assets/js/main.js') }}"></script>
 
 </body>
 

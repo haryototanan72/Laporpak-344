@@ -10,52 +10,76 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        {
-            $laporans = Laporan::all();
-            return view('admin.laporan.index', compact('laporans'));
-        }
-        // Mulai dari query dasar
         $laporan = Laporan::query();
 
-        // Filter berdasarkan status
+        // Filter
         if ($request->filled('status')) {
             $laporan->where('status', $request->status);
         }
 
-        // Filter berdasarkan tanggal
+        // Ganti filter tanggal_lapor ke created_at
         if ($request->filled('tanggal')) {
-            $laporan->whereDate('tanggal_lapor', $request->tanggal);
+            $laporan->whereDate('created_at', $request->tanggal);
         }
 
-        // Filter berdasarkan jenis laporan (jika sudah ada field-nya)
         if ($request->filled('jenis')) {
-            $laporan->where('jenis_laporan', $request->jenis); // sesuaikan dengan kolommu
+            $laporan->where('jenis_laporan', $request->jenis);
         }
 
         // Sorting
         if ($request->filled('sort')) {
-            $sort = $request->sort;
-            switch ($sort) {
+            switch ($request->sort) {
                 case 'terbaru':
-                    $laporan->orderBy('tanggal_lapor', 'desc');
+                    $laporan->orderBy('created_at', 'desc');
                     break;
                 case 'prioritas':
-                    $laporan->orderBy('prioritas', 'desc'); // pastikan kolom ini ada
+                    $laporan->orderBy('prioritas', 'desc');
                     break;
                 case 'status':
                     $laporan->orderBy('status');
                     break;
             }
         } else {
-            $laporan->orderBy('tanggal_lapor', 'desc'); // default
+            $laporan->orderBy('created_at', 'desc'); // Default sort
         }
 
-        $data = $laporan->paginate(10);
+        $laporans = $laporan->paginate(10);
 
-        return view('admin.laporan.index', compact('data'));
+        return view('admin.laporan.index', compact('laporans'));
     }
-}
 
-{
-    //
+    public function updateStatus(Request $request, Laporan $laporan)
+    {
+        $validStatuses = [
+            'diajukan', 'diverifikasi', 'diterima', 'ditolak', 'ditindaklanjuti', 'ditanggapi', 'selesai'
+        ];
+
+        $request->validate([
+            'status' => 'required|in:' . implode(',', $validStatuses)
+        ]);
+
+        $laporan->status = $request->status;
+        $laporan->save();
+
+        // Sinkronkan status ke complaint jika ada relasi nomor laporan
+        $complaint = \App\Models\Complaint::where('name', $laporan->nomor_laporan)->first();
+        if ($complaint) {
+            $complaint->status = $request->status;
+            $complaint->save();
+        }
+
+        return redirect()->back()->with('success', 'Status laporan berhasil diperbarui');
+    }
+
+    public function detail($id)
+    {
+        $laporan = Laporan::with('user')->findOrFail($id);
+
+        return view('admin.laporan.detaillaporan', compact('laporan'));
+    }
+
+    public function show(Laporan $laporan)
+    {
+        return view('admin.laporan.show', compact('laporan'));
+    }
 }
