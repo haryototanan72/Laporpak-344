@@ -11,18 +11,12 @@
       <span class="mb-3" style="color:#c9c9c9;font-size:1.04em;">Silakan isi data Anda untuk membuat akun</span>
       <form method="POST" action="{{ route('register') }}">
         @csrf
-        <!-- <div class="mb-2">
-          <input type="text" name="last_name" class="form-control auth-input w-100" placeholder="Nama Belakang" required autofocus>
-        </div>
         <div class="mb-2">
-          <input type="text" name="first_name" class="form-control auth-input w-100" placeholder="Nama Depan" required>
-        </div> -->
+          <input type="text" name="name" class="form-control auth-input w-100" placeholder="Nama Lengkap" required autofocus>
+        </div>
         <div class="mb-2">
           <input type="email" name="email" class="form-control auth-input w-100" placeholder="Email" required>
         </div>
-        <!-- <div class="mb-2">
-          <input type="text" name="phone" class="form-control auth-input w-100" placeholder="No. Telepon" required>
-        </div> -->
         <div class="mb-2">
           <input type="password" name="password" class="form-control auth-input w-100" placeholder="Kata Sandi" required>
         </div>
