@@ -9,15 +9,32 @@ use Illuminate\Support\Facades\Auth;
 
 class ComplaintController extends Controller
 {
-    // Tampilkan daftar laporan
-    public function index()
+    // Tampilkan daftar laporan dengan filter
+    public function index(Request $request)
     {
         // Hanya admin yang boleh akses
         if (!Auth::check() || Auth::user()->role !== 'admin') {
             abort(403, 'Unauthorized');
         }
-        // Ambil semua laporan beserta user
-        $laporans = Laporan::with('user')->latest()->paginate(20);
+        $query = Laporan::with('user');
+
+        // Filter status jika dipilih
+        if ($request->filled('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // Urutkan berdasarkan tanggal input
+        if ($request->filled('tanggal') && $request->tanggal != '') {
+            if ($request->tanggal == 'terbaru') {
+                $query->orderBy('created_at', 'desc');
+            } elseif ($request->tanggal == 'terlama') {
+                $query->orderBy('created_at', 'asc');
+            }
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $laporans = $query->paginate(20);
         return view('admin.laporan.index', compact('laporans'));
     }
 

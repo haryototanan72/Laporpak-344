@@ -105,6 +105,19 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'warning',
+        title: 'Nomor Laporan Tidak Ditemukan',
+        text: 'Cek dan Pastikan Kembali Nomor Laporan yang Anda Punya',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Tutup'
+    });
+</script>
+@endif
+
 @push('scripts')
 <style>
 .bi {

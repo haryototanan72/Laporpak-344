@@ -42,6 +42,41 @@
                                         </form>
                                     </td>
                                 </tr>
+                                @if($laporan->bukti_laporan)
+                                <tr>
+                                    <th class="text-secondary align-top">Bukti Laporan</th>
+                                    <td>
+                                        <div style="border:1px solid #ddd; border-radius:8px; padding:8px; width:140px; background:#f8f9fa; display:flex; align-items:center; justify-content:center;">
+                                            <img src="{{ asset('storage/' . $laporan->bukti_laporan) }}" alt="Bukti Laporan" style="max-width:120px; max-height:120px; object-fit:cover; border-radius:6px; cursor:pointer;" id="buktiLaporanImg">
+                                        </div>
+                                        <!-- Modal untuk preview gambar besar -->
+                                        <div id="buktiModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+                                            <div style="position:relative; display:flex; align-items:center; justify-content:center; height:100vh;">
+                                                <img src="{{ asset('storage/' . $laporan->bukti_laporan) }}" alt="Bukti Laporan Besar" style="max-width:80vw; max-height:80vh; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.3);">
+                                                <button id="closeBuktiModal" style="position:absolute; top:20px; right:20px; background:#fbb03b; color:#fff; border:none; border-radius:50%; width:40px; height:40px; font-size:22px; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.2); cursor:pointer;">&times;</button>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var img = document.getElementById('buktiLaporanImg');
+                                                var modal = document.getElementById('buktiModal');
+                                                var closeBtn = document.getElementById('closeBuktiModal');
+                                                if(img && modal && closeBtn) {
+                                                    img.addEventListener('click', function() {
+                                                        modal.style.display = 'flex';
+                                                    });
+                                                    closeBtn.addEventListener('click', function() {
+                                                        modal.style.display = 'none';
+                                                    });
+                                                    modal.addEventListener('click', function(e) {
+                                                        if(e.target === modal) modal.style.display = 'none';
+                                                    });
+                                                }
+                                            });
+                                        </script>
+                                    </td>
+                                </tr>
+                                @endif
                             </table>
                         </div>
                         <div class="col-md-6">
@@ -49,14 +84,6 @@
                             <div class="bg-light p-3 rounded shadow-sm border mb-3 h-100">
                                 <span class="text-dark">{{ $laporan->deskripsi }}</span>
                             </div>
-                            @if($laporan->foto)
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <h4>Foto</h4>
-                                    <img src="{{ asset('storage/' . $laporan->foto) }}" alt="Foto Laporan" class="img-fluid rounded" style="max-width: 500px">
-                                </div>
-                            </div>
-                            @endif
                         </div>
                     </div>
                     <!-- Timeline dipindah ke bawah -->

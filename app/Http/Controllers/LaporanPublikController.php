@@ -52,7 +52,7 @@ class LaporanPublikController extends Controller
         $laporan->kategori = $request->kategori_laporan;
         $laporan->deskripsi = $request->deskripsi_laporan;
         $laporan->nomor_laporan = $nomorLaporan;
-        $laporan->status = 'Menunggu'; // default status awal
+        $laporan->status = 'diajukan'; // default status awal
         $laporan->save();
 
         // Beri response sukses

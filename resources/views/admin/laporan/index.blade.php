@@ -6,23 +6,28 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <h2 class="fw-bold mb-4" style="letter-spacing: 1px; color: #2763ba;">Laporan</h2>
-                    <div class="d-flex align-items-center mb-3 gap-2">
-                        <button class="btn btn-light border shadow-sm d-flex align-items-center gap-2">
-                            <i class="bi bi-funnel"></i> Filter By
-                        </button>
-                        <button class="btn btn-light border shadow-sm d-flex align-items-center gap-2">
-                            Date <i class="bi bi-chevron-down"></i>
-                        </button>
-                        <button class="btn btn-light border shadow-sm d-flex align-items-center gap-2">
-                            Order Type <i class="bi bi-chevron-down"></i>
-                        </button>
-                        <button class="btn btn-light border shadow-sm d-flex align-items-center gap-2">
-                            Order Status <i class="bi bi-chevron-down"></i>
-                        </button>
-                        <button class="btn btn-outline-danger ms-auto">
-                            <i class="bi bi-arrow-clockwise"></i> Reset Filter
-                        </button>
-                    </div>
+                    <form method="GET" action="{{ route('admin.laporan.index') }}" class="d-flex align-items-center mb-3 gap-2">
+                        <label class="mb-0">Filter</label>
+                        <select name="tanggal" class="form-select w-auto">
+                            <option value="">Urutkan Tanggal</option>
+                            <option value="terbaru" {{ request('tanggal') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                            <option value="terlama" {{ request('tanggal') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                        </select>
+                        <select name="status" class="form-select w-auto">
+                            <option value="">Status Laporan</option>
+                            <option value="diajukan" {{ request('status') == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
+                            <option value="diverifikasi" {{ request('status') == 'diverifikasi' ? 'selected' : '' }}>Diverifikasi</option>
+                            <option value="diterima" {{ request('status') == 'diterima' ? 'selected' : '' }}>Diterima</option>
+                            <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                            <option value="ditindaklanjuti" {{ request('status') == 'ditindaklanjuti' ? 'selected' : '' }}>Ditindaklanjuti</option>
+                            <option value="ditanggapi" {{ request('status') == 'ditanggapi' ? 'selected' : '' }}>Ditanggapi</option>
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Terapkan</button>
+                        <a href="{{ route('admin.laporan.index') }}" class="btn btn-outline-danger ms-auto">
+                            <i class="bi bi-arrow-clockwise"></i> Atur Ulang Filter
+                        </a>
+                    </form>
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
                             <thead class="table-light">

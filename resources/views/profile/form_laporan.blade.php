@@ -185,11 +185,12 @@
         @if(session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
-        <form id="laporanForm" enctype="multipart/form-data" style="margin-top:10px;">
+        <div id="errorMessage" class="alert alert-danger" style="display:none;"></div>
+        <form id="laporanForm" enctype="multipart/form-data" style="margin-top:10px;" autocomplete="off" novalidate>
             @csrf
             <div class="form-group">
                 <label for="kategori_laporan">Jenis Laporan <span class="required">*</span></label>
-                <select class="form-control" id="jenis_laporan" name="jenis_laporan" required>
+                <select class="form-control" id="jenis_laporan" name="jenis_laporan">
                     <option value="">Pilih Jenis Laporan</option>
                     <option value="Privat">Privat/Rahasia</option>
                     <option value="Publik">Publik</option>
@@ -199,13 +200,13 @@
 
             <div class="form-group">
                 <label for="bukti_laporan">Bukti Laporan <span class="required">*</span></label>
-                <input type="file" class="form-control" id="bukti_laporan" name="bukti_laporan" accept=".jpg,.jpeg,.png,.mp4" required>
+                <input type="file" class="form-control" id="bukti_laporan" name="bukti_laporan" accept=".jpg,.jpeg,.png,.mp4">
                 <div id="bukti_laporan_error" class="error-message"></div>
             </div>
 
             <div class="form-group">
                 <label for="lokasi_laporan">Lokasi Laporan <span class="required">*</span></label>
-                <input type="text" class="form-control" id="lokasi_laporan" name="lokasi_laporan" placeholder="Ketik disini" required>
+                <input type="text" class="form-control" id="lokasi_laporan" name="lokasi_laporan" placeholder="Ketik disini">
                 <div id="lokasi_laporan_error" class="error-message"></div>
                 <div id="map">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.6091242787!2d107.57311654129782!3d-6.903273917028756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Kota%20Bandung%2C%20Jawa%20Barat!5e0!3m2!1sid!2sid!4v1645521234567!5m2!1sid!2sid" allowfullscreen="" loading="lazy"></iframe>
@@ -219,7 +220,7 @@
 
             <div class="form-group">
                 <label for="kategori_laporan">Kategori Laporan <span class="required">*</span></label>
-                <select class="form-control" id="kategori_laporan" name="kategori_laporan" required>
+                <select class="form-control" id="kategori_laporan" name="kategori_laporan">
                     <option value="">Pilih Kategori</option>
                     <option value="Jalan Rusak">Jalan Rusak</option>
                     <option value="Jembatan Rusak">Jembatan Rusak</option>
@@ -230,13 +231,13 @@
 
             <div class="form-group">
                 <label for="deskripsi_laporan">Deskripsi Laporan <span class="required">*</span></label>
-                <textarea class="form-control" id="deskripsi_laporan" name="deskripsi_laporan" rows="3" required></textarea>
+                <textarea class="form-control" id="deskripsi_laporan" name="deskripsi_laporan" rows="3"></textarea>
                 <div id="deskripsi_laporan_error" class="error-message"></div>
             </div>
 
             <div class="form-group">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="ceklis" name="ceklis" required>
+                    <input class="form-check-input" type="checkbox" id="ceklis" name="ceklis">
                     <label class="form-check-label" for="ceklis">
                         Laporan yang Saya Buat Benar dan dapat dipertanggungjawabkan <span class="required">*</span>
                     </label>
@@ -248,59 +249,108 @@
             <button type="submit" class="btn btn-submit">Kirim</button>
         </form>
 
-        <div id="successMessage" class="alert alert-success" style="display:none;">
-            Laporan berhasil dikirim! Nomor Laporan Anda adalah: <span id="nomorLaporan"></span>
-        </div>
-        <div id="errorMessage" class="alert alert-danger" style="display:none;"></div>
-    </div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Hilangkan required HTML agar browser tidak pakai pesan default
+                $('#jenis_laporan').removeAttr('required');
+                $('#bukti_laporan').removeAttr('required');
+                $('#lokasi_laporan').removeAttr('required');
+                $('#kategori_laporan').removeAttr('required');
+                $('#deskripsi_laporan').removeAttr('required');
+                $('#ceklis').removeAttr('required');
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#laporanForm').submit(function(e) {
-                e.preventDefault();
+                $('#laporanForm').submit(function(e) {
+                    e.preventDefault();
 
-                var formData = new FormData(this);
+                    var jenis_laporan = $('#jenis_laporan').val();
+                    var bukti_laporan = $('#bukti_laporan').val();
+                    var lokasi_laporan = $('#lokasi_laporan').val();
+                    var kategori_laporan = $('#kategori_laporan').val();
+                    var deskripsi_laporan = $('#deskripsi_laporan').val();
+                    var ceklis = $('#ceklis').is(':checked');
 
-                $.ajax({
-                    url: "{{ route('submit.laporan') }}",
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        $('#successMessage').show();
-                        $('#nomorLaporan').text(response.nomor_laporan);
-                        $('#errorMessage').hide();
+                    $('.error-message').text('');
 
-                        // Reset form fields
-                        $('#laporanForm')[0].reset();
-                        // Clear error messages
-                        $('.error-message').text('');
-                    },
-                    error: function(xhr, status, error) {
-                        var errorMessage = '';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        } else {
-                            errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
-                        }
-                        $('#errorMessage').text(errorMessage);
-                        $('#errorMessage').show();
-                        $('#successMessage').hide();
-
-                        // Tampilkan pesan error dari validasi
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            var errors = xhr.responseJSON.errors;
-                            $.each(errors, function(key, value) {
-                                $('#' + key + '_error').text(value[0]);
-                            });
-                        }
+                    // Fungsi popup error universal
+                    function showPopup(msg) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Peringatan',
+                            text: msg,
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'Tutup',
+                            customClass: {
+                                title: 'swal2-title',
+                                popup: 'swal2-popup',
+                                confirmButton: 'swal2-confirm'
+                            }
+                        });
                     }
+
+                    if (!bukti_laporan && !jenis_laporan && !lokasi_laporan && !kategori_laporan && !deskripsi_laporan && !ceklis) {
+                        showPopup('Tidak Dapat Mengirimkan Laporan Kosong');
+                        return false;
+                    }
+                    if (!bukti_laporan) {
+                        $('#bukti_laporan_error').text('Lengkapi Bukti Kerusakan');
+                        showPopup('Lengkapi Bukti Kerusakan');
+                        return false;
+                    }
+                    if (!jenis_laporan || !lokasi_laporan || !kategori_laporan || !deskripsi_laporan) {
+                        showPopup('Lengkapi kolom yang kosong');
+                        if (!jenis_laporan) $('#jenis_laporan_error').text('Kolom wajib diisi');
+                        if (!lokasi_laporan) $('#lokasi_laporan_error').text('Kolom wajib diisi');
+                        if (!kategori_laporan) $('#kategori_laporan_error').text('Kolom wajib diisi');
+                        if (!deskripsi_laporan) $('#deskripsi_laporan_error').text('Kolom wajib diisi');
+                        return false;
+                    }
+                    if (!ceklis) {
+                        $('#pernyataan_error').text('Ceklis Pernyataan');
+                        showPopup('Ceklis Pernyataan');
+                        return false;
+                    }
+
+                    var formData = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ route('submit.laporan') }}",
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: 'Laporan berhasil dikirim! Nomor Laporan Anda adalah: ' + response.nomor_laporan,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Tutup'
+                            });
+                            $('#laporanForm')[0].reset();
+                            $('.error-message').text('');
+                        },
+                        error: function(xhr, status, error) {
+                            var errorMessage = '';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            } else {
+                                errorMessage = 'Terjadi kesalahan. Silakan coba lagi.';
+                            }
+                            showPopup(errorMessage);
+                            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                var errors = xhr.responseJSON.errors;
+                                $.each(errors, function(key, value) {
+                                    $('#' + key + '_error').text(value[0]);
+                                });
+                            }
+                        }
+                    });
                 });
             });
-        });
-    </script>
+        </script>
+    </div>
 </body>
 </html>
