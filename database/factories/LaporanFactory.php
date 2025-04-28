@@ -14,8 +14,12 @@ class LaporanFactory extends Factory
         return [
             'nomor_laporan' => $this->faker->unique()->numerify('LAP###'),
             'status' => 'diajukan',
-            'user_id' => \App\Models\User::factory(), // ini udah bener buat relasi user otomatis
-            // tambahkan field lain jika perlu
+            'user_id' => \App\Models\User::factory(),
+            'bukti_laporan' => 'dummy.jpg',
+            'lokasi' => $this->faker->city(),
+            'jenis_laporan' => $this->faker->randomElement(['Privat', 'Publik']),
+            'kategori' => $this->faker->randomElement(['Jalan Rusak', 'Jembatan Rusak', 'Banjir']),
+            'deskripsi' => $this->faker->sentence(10),
         ];
     }
 }

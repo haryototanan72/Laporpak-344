@@ -10,7 +10,7 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        $laporan = Laporan::query();
+        $laporan = \App\Models\Laporan::query();
 
         // Filter
         if ($request->filled('status')) {
@@ -24,6 +24,11 @@ class LaporanController extends Controller
 
         if ($request->filled('jenis')) {
             $laporan->where('jenis_laporan', $request->jenis);
+        }
+
+        // Pastikan data dummy selalu tampil untuk admin
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            // Jangan filter hanya milik user tertentu, biarkan tampil semua
         }
 
         // Sorting

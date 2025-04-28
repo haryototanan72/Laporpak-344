@@ -13,12 +13,17 @@ return new class extends Migration
         DB::table('laporans')->where('status', 'Selesai')->update(['status' => 'selesai']);
 
         // Step 2: Ubah enum status lama ke enum status baru
-        DB::statement("ALTER TABLE laporans MODIFY status ENUM('diajukan','diverifikasi','diterima','ditolak','ditindaklanjuti','ditanggapi','selesai') NOT NULL DEFAULT 'diajukan'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE laporans MODIFY status ENUM('diajukan','diverifikasi','diterima','ditolak','ditindaklanjuti','ditanggapi','selesai') NOT NULL DEFAULT 'diajukan'");
+        }
+        // Untuk SQLite: biarkan sebagai string, enum hanya di level aplikasi
     }
 
     public function down(): void
     {
         // Rollback: kembalikan enum ke status lama
-        DB::statement("ALTER TABLE laporans MODIFY status ENUM('Menunggu', 'Diproses', 'Selesai') NOT NULL DEFAULT 'Menunggu'");
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE laporans MODIFY status ENUM('Menunggu', 'Diproses', 'Selesai') NOT NULL DEFAULT 'Menunggu'");
+        }
     }
 };
