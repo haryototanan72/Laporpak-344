@@ -57,6 +57,7 @@
           <li><a href="{{ route('track.show') }}" class="btn-get-started">Lacak Laporan</a></li>
           @if (Route::has('login'))
             @auth
+              <li><a href="{{ route('laporan.index') }}" class="btn-get-started">History Laporan Saya</a></li>
               <li><a href="{{ url('/dashboard/user') }}" class="btn-get-started">Dashboard</a></li>
             @else
               <li><a href="{{ route('login') }}" class="btn-get-started">Login</a></li>

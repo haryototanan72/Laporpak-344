@@ -5,7 +5,49 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS untuk OpenStreetMap -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- jQuery UI CSS untuk Autocomplete -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <!-- JANGAN load JS di sini, load SEMUA JS DI PALING BAWAH sebelum </body> -->
     <style>
+        /* Pastikan dropdown autocomplete selalu di depan map */
+        .ui-autocomplete {
+            z-index: 99999 !important;
+            position: absolute !important;
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+
+        /* Styling untuk button cancel dan submit */
+        .btn-cancel {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+            color: white;
+        }
+
+        .btn-submit {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+            color: white;
+        }
         body {
             font-family: 'Poppins', Arial, sans-serif;
             background: linear-gradient(135deg, #e0ecfc 0%, #f9f6e7 100%);
@@ -206,11 +248,19 @@
 
             <div class="form-group">
                 <label for="lokasi_laporan">Lokasi Laporan <span class="required">*</span></label>
-                <input type="text" class="form-control" id="lokasi_laporan" name="lokasi_laporan" placeholder="Ketik disini">
-                <div id="lokasi_laporan_error" class="error-message"></div>
-                <div id="map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.6091242787!2d107.57311654129782!3d-6.903273917028756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Kota%20Bandung%2C%20Jawa%20Barat!5e0!3m2!1sid!2sid!4v1645521234567!5m2!1sid!2sid" allowfullscreen="" loading="lazy"></iframe>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="lokasi_laporan" name="lokasi_laporan" placeholder="Ketik disini">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary" id="btn-lokasi-saya" title="Dapatkan Lokasi Saya">
+                            <span class="d-none d-md-inline">Lokasi Saya</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                              <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+                <div id="lokasi_laporan_error" class="error-message"></div>
+                <div id="map" style="height: 200px;"></div>
             </div>
 
             <div class="form-group">
@@ -245,15 +295,109 @@
                 <div id="pernyataan_error" class="error-message"></div>
             </div>
 
-            <button type="button" class="btn btn-cancel">Cancel</button>
+            <a href="{{ url()->previous() }}" class="btn btn-cancel">Cancel</a>
             <button type="submit" class="btn btn-submit">Kirim</button>
         </form>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script>
-            $(document).ready(function() {
+        // --- LEAFLET + OSM + NOMINATIM + jQuery UI Autocomplete ---
+        let map, marker;
+        $(document).ready(function() {
+            // Inisialisasi map
+            map = L.map('map').setView([-6.9032739, 107.5731165], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: ' OpenStreetMap contributors'
+            }).addTo(map);
+            marker = L.marker([-6.9032739, 107.5731165], {draggable: false}).addTo(map);
+
+            // Autocomplete lokasi dengan jQuery UI + Nominatim
+            $('#lokasi_laporan').autocomplete({
+                minLength: 2,
+                source: function(request, response) {
+                    $.ajax({
+                        url: 'https://nominatim.openstreetmap.org/search',
+                        data: {
+                            q: request.term,
+                            format: 'json',
+                            addressdetails: 1,
+                            limit: 5
+                        },
+                        success: function(data) {
+                            response($.map(data, function(item) {
+                                return {
+                                    label: item.display_name,
+                                    value: item.display_name,
+                                    lat: item.lat,
+                                    lon: item.lon
+                                };
+                            }));
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Nominatim error:', error);
+                            response([]);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    var latlng = [parseFloat(ui.item.lat), parseFloat(ui.item.lon)];
+                    marker.setLatLng(latlng);
+                    map.setView(latlng, 16);
+                }
+            });
+
+            // Jika field lokasi diisi manual koordinat
+            $('#lokasi_laporan').on('change', function() {
+                var val = $(this).val();
+                var coordMatch = val.match(/^(-?\d+\.\d+),\s*(-?\d+\.\d+)$/);
+                if (coordMatch) {
+                    var lat = parseFloat(coordMatch[1]);
+                    var lng = parseFloat(coordMatch[2]);
+                    var latlng = [lat, lng];
+                    marker.setLatLng(latlng);
+                    map.setView(latlng, 16);
+                    // Reverse geocoding ke alamat
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.display_name) {
+                                $('#lokasi_laporan').val(data.display_name);
+                            }
+                        });
+                }
+            });
+
+            // Fitur Lokasi Saya
+            $('#btn-lokasi-saya').on('click', function() {
+                let btn = $(this);
+                let oldText = btn.html();
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Mengambil...');
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var lat = position.coords.latitude;
+                        var lng = position.coords.longitude;
+                        var latlng = [lat, lng];
+                        marker.setLatLng(latlng);
+                        map.setView(latlng, 16);
+                        // Reverse geocoding ke alamat
+                        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                $('#lokasi_laporan').val(data.display_name || (lat + ', ' + lng));
+                            });
+                        btn.prop('disabled', false).html(oldText);
+                    }, function(error) {
+                        btn.prop('disabled', false).html(oldText);
+                    }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+                } else {
+                    btn.prop('disabled', false).html(oldText);
+                }
+            });
+
                 // Hilangkan required HTML agar browser tidak pakai pesan default
                 $('#jenis_laporan').removeAttr('required');
                 $('#bukti_laporan').removeAttr('required');
@@ -300,7 +444,7 @@
                         return false;
                     }
                     if (!jenis_laporan || !lokasi_laporan || !kategori_laporan || !deskripsi_laporan) {
-                        showPopup('Lengkapi kolom yang kosong');
+                        showPopup('Lengkapi Kolom yang Kosong');
                         if (!jenis_laporan) $('#jenis_laporan_error').text('Kolom wajib diisi');
                         if (!lokasi_laporan) $('#lokasi_laporan_error').text('Kolom wajib diisi');
                         if (!kategori_laporan) $('#kategori_laporan_error').text('Kolom wajib diisi');
@@ -349,8 +493,61 @@
                         }
                     });
                 });
+
+                // Fitur Lokasi Saya
+                let geoWatchId = null;
+                $('#btn-lokasi-saya').on('click', function() {
+                    let btn = $(this);
+                    let oldText = btn.html();
+                    btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Mengambil...');
+                    if (navigator.geolocation) {
+                        if (geoWatchId !== null) {
+                            navigator.geolocation.clearWatch(geoWatchId);
+                        }
+                        geoWatchId = navigator.geolocation.getCurrentPosition(function(position) {
+                            var lat = position.coords.latitude;
+                            var lng = position.coords.longitude;
+                            var latlng = { lat: lat, lng: lng };
+                            // Reverse geocode ke alamat
+                            geocoder.geocode({ location: latlng }, function(results, status) {
+                                if (status === 'OK' && results[0]) {
+                                    $('#lokasi_laporan').val(results[0].formatted_address);
+                                } else {
+                                    $('#lokasi_laporan').val(lat + ', ' + lng);
+                                }
+                            });
+                            // Update map dan marker
+                            map.setCenter(latlng);
+                            map.setZoom(16);
+                            marker.setPosition(latlng);
+                            btn.prop('disabled', false).html(oldText);
+                        }, function(error) {
+                            btn.prop('disabled', false).html(oldText);
+                        }, { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+                    } else {
+                        btn.prop('disabled', false).html(oldText);
+                    }
+                });
+
+                // Update marker & map jika field lokasi diisi manual koordinat
+                $('#lokasi_laporan').on('change', function() {
+                    var val = $(this).val();
+                    // Jika input berupa koordinat
+                    var coordMatch = val.match(/^(-?\d+\.\d+),\s*(-?\d+\.\d+)$/);
+                    if (coordMatch) {
+                        var lat = parseFloat(coordMatch[1]);
+                        var lng = parseFloat(coordMatch[2]);
+                        var latlng = { lat: lat, lng: lng };
+                        map.setCenter(latlng);
+                        map.setZoom(16);
+                        marker.setPosition(latlng);
+                    }
+                });
             });
+
+
         </script>
+
     </div>
 </body>
 </html>

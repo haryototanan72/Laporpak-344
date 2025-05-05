@@ -47,6 +47,7 @@
             </main>
         </div>
 
+        @unless(isset($noScripts) && $noScripts)
         <!-- Vendor JS Files -->
         <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
@@ -56,5 +57,6 @@
 
         <!-- Main JS File -->
         <script src="{{ asset('assets/js/main.js') }}"></script>
+        @endunless
     </body>
 </html>

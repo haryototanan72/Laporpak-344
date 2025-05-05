@@ -80,4 +80,90 @@ class LaporanController extends Controller
             return redirect()->route('form_laporan')->with('error', 'Gagal menyimpan laporan ke database: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Menampilkan daftar history laporan milik user yang sedang login.
+     */
+    public function index(Request $request)
+    {
+        $laporans = Laporan::where('user_id', auth()->id())->latest()->get();
+        return view('laporan.history', compact('laporans'));
+    }
+
+    /**
+     * Menampilkan detail laporan.
+     */
+    public function show($id)
+    {
+        $laporan = Laporan::where('user_id', auth()->id())->findOrFail($id);
+        return view('laporan.show', compact('laporan'));
+    }
+
+    /**
+     * Menampilkan form edit laporan.
+     */
+    public function edit($id)
+    {
+        $laporan = Laporan::where('user_id', auth()->id())->findOrFail($id);
+        return view('laporan.edit', compact('laporan'));
+    }
+
+    /**
+     * Update laporan milik user.
+     */
+    public function update(Request $request, $id)
+    {
+        $laporan = Laporan::where('user_id', auth()->id())->findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'jenis_laporan' => 'required',
+            'lokasi' => 'required',
+            'kategori' => 'required',
+            'deskripsi' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $laporan->jenis_laporan = $request->jenis_laporan;
+        $laporan->lokasi = $request->lokasi;
+        $laporan->kategori = $request->kategori;
+        $laporan->deskripsi = $request->deskripsi;
+        $laporan->ciri_khusus = $request->ciri_khusus; // Menambahkan update untuk ciri_khusus
+        if ($request->hasFile('bukti_laporan')) {
+            $file = $request->file('bukti_laporan');
+            $path = $file->store('bukti_laporan', 'public');
+            $laporan->bukti_laporan = $path;
+        }
+        $laporan->save();
+        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil diupdate!')->with('swal', [
+            'title' => 'Berhasil!',
+            'text' => 'Laporan berhasil diupdate!',
+            'icon' => 'success'
+        ]);
+    }
+
+    /**
+     * Hapus laporan milik user.
+     */
+    public function destroy($id)
+    {
+        // Cek apakah laporan ada dan milik user yang sedang login
+        $laporan = Laporan::where('user_id', auth()->id())
+            ->where('id', $id)
+            ->first();
+
+        if (!$laporan) {
+            return redirect()->route('laporan.index')->with('error', 'Laporan tidak ditemukan!');
+        }
+
+        // Hapus file bukti laporan jika ada
+        if ($laporan->bukti_laporan) {
+            $path = public_path('uploads/laporan/' . $laporan->bukti_laporan);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+
+        $laporan->delete();
+        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dihapus!');
+    }
 }

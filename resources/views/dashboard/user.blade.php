@@ -28,7 +28,7 @@
           <li><a href="#" class="active">Dashboard</a></li>
           <li><a href="#statistik">Statistik</a></li>
           <li><a href="#kategori">Kategori</a></li>
-          <li><a href="#news">Laporan Saya</a></li>
+          <li><a href="{{ route('laporan.index') }}">Laporan Saya</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -72,7 +72,7 @@
           <div class="col-lg-8 d-flex flex-column justify-content-center text-white">
             <h1 class="fw-bold display-4 mb-2">LAYANAN PENGADUAN ONLINE</h1>
             <p class="fs-5 mb-3">Laporkan segera saat Anda mempunyai informasi Jalan atau Jembatan Nasional Rusak</p>
-            <a href="{{ route('profile.form_laporan') }}" class="btn btn-danger btn-lg px-4 py-2">LAPOR!</a>
+            <a href="{{ route('profile.form_laporan') }}" id="btn-lapor" class="btn btn-danger btn-lg px-4 py-2">LAPOR!</a>
           </div>
         </div>
       </div>
