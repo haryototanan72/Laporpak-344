@@ -39,6 +39,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('profile.show');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
+    // History Laporan User (lihat, edit, hapus, detail)
+    Route::resource('laporan', \App\Http\Controllers\LaporanController::class)->except(['create', 'store']);
+
     // Admin Routes
     Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');

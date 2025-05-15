@@ -31,7 +31,7 @@
                                                                  class="rounded-circle img-fluid mb-3"
                                                                  style="width: 150px; height: 150px; object-fit: cover;">
                                                         @else
-                                                            <img src="{{ asset('assets/img/default-avatar.png') }}" 
+                                                            <i class="fas fa-user-circle fa-2x" style="color: #6c757d;"></i>
                                                                  alt="Default Avatar" 
                                                                  class="rounded-circle img-fluid mb-3"
                                                                  style="width: 150px; height: 150px; object-fit: cover; background-color: #f8f9fa;">
