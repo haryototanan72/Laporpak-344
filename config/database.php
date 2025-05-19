@@ -111,6 +111,20 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+            'laporpak2' => [
+            'driver' => 'mysql',
+            'host' => env('DB_LAPORPAK2_HOST', '127.0.0.1'),
+            'port' => env('DB_LAPORPAK2_PORT', '3306'),
+            'database' => env('DB_LAPORPAK2_DATABASE', 'laporpak2'),
+            'username' => env('DB_LAPORPAK2_USERNAME', 'root'),
+            'password' => env('DB_LAPORPAK2_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
 
     ],
 

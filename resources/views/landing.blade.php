@@ -303,7 +303,7 @@
           <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
             <div class="card-kategori text-center shadow">
               <i class="bi bi-search text-danger"></i>
-              <h5><a href="{{ route('laporan.masuk') }}">Lacak Laporanmu &gt;</a></h5>
+              <h5><a href="{{ route('track.show') }}">Lacak Laporanmu &gt;</a></h5>
               <p>Sudah Melapor? Lacak menggunakan nomor laporan.</p>
             </div>
           </div>
@@ -311,7 +311,7 @@
           <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
             <div class="card-kategori text-center shadow">
               <i class="bi bi-graph-up text-purple"></i>
-              <h5><a href="{{ route('laporan.masuk') }}">Laporan Masuk &amp; Selesai &gt;</a></h5>
+              <h5><a href="{{ route('track.show') }}">Laporan Masuk &amp; Selesai &gt;</a></h5>
               <p>Data Laporan Masuk Tahun 2025</p>
             </div>
           </div>

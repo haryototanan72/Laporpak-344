@@ -24,68 +24,102 @@
             <div class="flex justify-center mb-10">
                 <div class="track-timeline">
                     @php
-                        $steps = [
-                            [
-                                'title' => 'Tulis Laporan',
-                                'desc' => 'Laporkan keluhan atau aspirasi Anda dengan jelas dan lengkap',
-                                'icon' => 'fa-pencil',
-                                'status' => 'diajukan',
-                            ],
-                            [
-                                'title' => 'Proses Verifikasi',
-                                'desc' => 'Dalam 2 hari laporan Anda akan diverifikasi dan ditindaklanjuti',
-                                'icon' => 'fa-magnifying-glass',
-                                'status' => 'diverifikasi',
-                            ],
-                            [
-                                'title' => 'Laporan Diterima',
-                                'desc' => 'Laporan Anda telah diverifikasi dan diterima',
-                                'icon' => 'fa-file-circle-check',
-                                'status' => 'diterima',
-                            ],
-                            [
-                                'title' => 'Proses Tindak Lanjut',
-                                'desc' => 'Laporan sedang dalam proses perbaikan',
-                                'icon' => 'fa-screwdriver-wrench',
-                                'status' => 'ditindaklanjuti',
-                            ],
-                            [
-                                'title' => 'Beri Tanggapan',
-                                'desc' => 'Anda dapat menanggapi tindak lanjut',
-                                'icon' => 'fa-comment-dots',
-                                'status' => 'ditanggapi',
-                            ],
-                            [
-                                'title' => 'Selesai',
-                                'desc' => 'Laporan Anda telah selesai ditindaklanjuti',
-                                'icon' => 'fa-circle-check',
-                                'status' => 'selesai',
-                            ],
-                        ];
-                        $status_order = ['diajukan','diverifikasi','diterima','ditindaklanjuti','ditanggapi','selesai'];
-                        $current_index = array_search($report->status, $status_order);
-                        if ($current_index === false) $current_index = 0;
-                    @endphp
-                    @foreach ($steps as $i => $step)
-                        @php
-                            // Kuning sampai status aktif, biru jika sudah selesai, abu jika belum
-                            $isYellow = $i <= $current_index && $current_index < 5;
-                            $isBlue = $current_index == 5 && $i <= $current_index;
-                            $iconClass = $isBlue ? 'active-blue' : ($isYellow ? 'active-yellow' : '');
-                            $lineClass = ($i < $current_index && $current_index < 5) ? 'yellow' : (($current_index == 5 && $i < $current_index) ? '' : '');
-                            $titleClass = $isYellow ? 'yellow' : '';
-                        @endphp
-                        <div class="track-timeline-step">
-                            <div class="track-timeline-icon {{ $iconClass }}">
-                                <i class="fa-solid {{ $step['icon'] }}"></i>
-                            </div>
-                            <div class="track-timeline-line {{ $lineClass }}"></div>
-                            <div class="track-timeline-content">
-                                <div class="track-timeline-title {{ $titleClass }}">{{ $step['title'] }}</div>
-                                <div class="track-timeline-desc">{{ $step['desc'] }}</div>
-                            </div>
-                        </div>
-                    @endforeach
+    $steps = [
+        [
+            'title' => 'Tulis Laporan',
+            'desc' => 'Laporkan keluhan atau aspirasi Anda dengan jelas dan lengkap',
+            'icon' => 'fa-pencil',
+            'status' => 'diajukan',
+        ],
+        [
+            'title' => 'Proses Verifikasi',
+            'desc' => 'Dalam 2 hari laporan Anda akan diverifikasi dan ditindaklanjuti',
+            'icon' => 'fa-magnifying-glass',
+            'status' => 'diverifikasi',
+        ],
+        [
+            'title' => 'Laporan Diterima',
+            'desc' => 'Laporan Anda telah diverifikasi dan diterima',
+            'icon' => 'fa-file-circle-check',
+            'status' => 'diterima',
+        ],
+        [
+            'title' => 'Proses Tindak Lanjut',
+            'desc' => 'Laporan sedang dalam proses perbaikan',
+            'icon' => 'fa-screwdriver-wrench',
+            'status' => 'ditindaklanjuti',
+        ],
+        // [
+        //     'title' => 'Beri Tanggapan',
+        //     'desc' => 'Anda dapat menanggapi tindak lanjut',
+        //     'icon' => 'fa-comment-dots',
+        //     'status' => 'ditanggapi',
+        // ],
+        [
+            'title' => 'Selesai',
+            'desc' => 'Laporan Anda telah selesai ditindaklanjuti',
+            'icon' => 'fa-circle-check',
+            'status' => 'selesai',
+        ],
+    ];
+    $status_order = ['diajukan','diverifikasi','diterima','ditindaklanjuti','ditanggapi','selesai'];
+    $current_index = array_search($report->status, $status_order);
+    $isDitolak = ($report->status === 'ditolak');
+    if ($isDitolak) {
+        $current_index = array_search('diterima', $status_order); // Stop at 'diterima' if rejected
+    }
+@endphp
+@if ($isDitolak)
+    @for ($i = 0; $i <= $current_index; $i++)
+        @php
+            $step = $steps[$i];
+            $isYellow = true;
+            $iconClass = 'active-yellow';
+            $lineClass = 'yellow';
+            $titleClass = 'yellow';
+        @endphp
+        <div class="track-timeline-step">
+            <div class="track-timeline-icon {{ $iconClass }}">
+                <i class="fa-solid {{ $step['icon'] }}"></i>
+            </div>
+            <div class="track-timeline-line {{ $lineClass }}"></div>
+            <div class="track-timeline-content">
+                <div class="track-timeline-title {{ $titleClass }}">{{ $step['title'] }}</div>
+                <div class="track-timeline-desc">{{ $step['desc'] }}</div>
+            </div>
+        </div>
+    @endfor
+    <div class="track-timeline-step">
+        <div class="track-timeline-icon active-red">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+        <div class="track-timeline-content">
+            <div class="track-timeline-title text-red-600 font-bold">Laporan Ditolak</div>
+            <div class="track-timeline-desc text-red-500">Laporan Anda ditolak dan tidak akan diproses lebih lanjut.</div>
+        </div>
+    </div>
+@else
+    @foreach ($steps as $i => $step)
+        @php
+            // Kuning sampai status aktif, biru jika sudah selesai, abu jika belum
+            $isYellow = $i <= $current_index && $current_index < 5;
+            $isBlue = $current_index == 5 && $i <= $current_index;
+            $iconClass = $isBlue ? 'active-blue' : ($isYellow ? 'active-yellow' : '');
+            $lineClass = ($i < $current_index && $current_index < 5) ? 'yellow' : (($current_index == 5 && $i < $current_index) ? '' : '');
+            $titleClass = $isYellow ? 'yellow' : '';
+        @endphp
+        <div class="track-timeline-step">
+            <div class="track-timeline-icon {{ $iconClass }}">
+                <i class="fa-solid {{ $step['icon'] }}"></i>
+            </div>
+            <div class="track-timeline-line {{ $lineClass }}"></div>
+            <div class="track-timeline-content">
+                <div class="track-timeline-title {{ $titleClass }}">{{ $step['title'] }}</div>
+                <div class="track-timeline-desc">{{ $step['desc'] }}</div>
+            </div>
+        </div>
+    @endforeach
+@endif
                 </div>
             </div>
 

@@ -27,10 +27,10 @@
                                 <tr>
                                     <th class="text-secondary">Status</th>
                                     <td>
-                                        <form id="statusForm" action="{{ route('admin.laporan.updateStatus', $laporan) }}" method="POST" class="d-inline">
+                                        <form id="statusForm" action="{{ route('admin.laporan.updateStatus', $laporan->nomor_laporan) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PUT')
-                                            <select name="status" id="statusSelect" class="form-select d-inline-block w-auto" style="background:#fbb03b;color:#fff;font-weight:600;">
+                                            <select name="status" id="statusSelect" class="form-select d-inline-block w-auto mb-2" style="background:#fbb03b;color:#fff;font-weight:600;">
                                                 <option value="diajukan" {{ $laporan->status == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
                                                 <option value="diverifikasi" {{ $laporan->status == 'diverifikasi' ? 'selected' : '' }}>Diverifikasi</option>
                                                 <option value="diterima" {{ $laporan->status == 'diterima' ? 'selected' : '' }}>Diterima</option>

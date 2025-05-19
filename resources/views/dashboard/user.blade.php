@@ -156,7 +156,7 @@
           <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="300">
             <div class="card-kategori text-center shadow">
               <i class="bi bi-clipboard-data text-primary"></i>
-              <h5><a href="#">Aktivitas Laporan &gt;</a></h5>
+              <h5><a href="{{ route('laporan.index') }}">Aktivitas Laporan &gt;</a></h5>
               <p>Lihat Aktivitas Laporanmu</p>
             </div>
           </div>

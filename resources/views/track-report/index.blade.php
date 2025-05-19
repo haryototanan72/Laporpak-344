@@ -72,7 +72,7 @@
                     <p class="text-muted small" style="font-size: 0.8rem;">Laporan sedang diproses harap tunggu program pembangunan</p>
                 </div>
 
-                <!-- Beri Tanggapan -->
+                {{-- <!-- Beri Tanggapan -->
                 <div class="text-center position-relative" style="z-index: 2; width: 150px;">
                     <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
                          style="width: 50px; height: 50px; background-color: #e0e0e0;">
@@ -80,7 +80,7 @@
                     </div>
                     <h6 class="mb-2">Beri Tanggapan</h6>
                     <p class="text-muted small" style="font-size: 0.8rem;">Anda dapat menanggapi umpan balik</p>
-                </div>
+                </div> --}}
 
                 <!-- Selesai -->
                 <div class="text-center position-relative" style="z-index: 2; width: 150px;">

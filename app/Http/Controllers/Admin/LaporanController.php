@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Laporan;
+// use checkdate 
 
 class LaporanController extends Controller
 {
     public function index(Request $request)
     {
+
         $laporan = \App\Models\Laporan::query();
 
         // Filter
@@ -17,19 +19,22 @@ class LaporanController extends Controller
             $laporan->where('status', $request->status);
         }
 
-        // Ganti filter tanggal_lapor ke created_at
+        // Filter berdasarkan tanggal
         if ($request->filled('tanggal')) {
-            $laporan->whereDate('created_at', $request->tanggal);
+            if ($request->tanggal === 'terbaru') {
+                $laporan->orderBy('created_at', 'desc');
+            } elseif ($request->tanggal === 'terlama') {
+                $laporan->orderBy('created_at', 'asc');
+            }
+        } else {
+            // Default: urutkan terbaru
+            $laporan->orderBy('created_at', 'desc');
         }
 
-        if ($request->filled('jenis')) {
-            $laporan->where('jenis_laporan', $request->jenis);
-        }
-
-        // Pastikan data dummy selalu tampil untuk admin
-        if (auth()->check() && auth()->user()->role === 'admin') {
-            // Jangan filter hanya milik user tertentu, biarkan tampil semua
-        }
+        // // Pastikan data dummy selalu tampil untuk admin
+        // if (auth()->check() && auth()->user()->role === 'admin') {
+        //     // Jangan filter hanya milik user tertentu, biarkan tampil semua
+        // }
 
         // Sorting
         if ($request->filled('sort')) {
@@ -53,7 +58,8 @@ class LaporanController extends Controller
         return view('admin.laporan.index', compact('laporans'));
     }
 
-    public function updateStatus(Request $request, Laporan $laporan)
+
+    public function updateStatus(Request $request, $nomor_laporan)
     {
         $validStatuses = [
             'diajukan', 'diverifikasi', 'diterima', 'ditolak', 'ditindaklanjuti', 'ditanggapi', 'selesai'
@@ -63,6 +69,7 @@ class LaporanController extends Controller
             'status' => 'required|in:' . implode(',', $validStatuses)
         ]);
 
+        $laporan = Laporan::where('nomor_laporan', $nomor_laporan)->firstOrFail();
         $laporan->status = $request->status;
         $laporan->save();
 
@@ -76,10 +83,9 @@ class LaporanController extends Controller
         return redirect()->back()->with('success', 'Status laporan berhasil diperbarui');
     }
 
-    public function detail($id)
+    public function detail($nomor_laporan)
     {
-        $laporan = Laporan::with('user')->findOrFail($id);
-
+        $laporan = Laporan::with('user')->where('nomor_laporan', $nomor_laporan)->firstOrFail();
         return view('admin.laporan.detaillaporan', compact('laporan'));
     }
 

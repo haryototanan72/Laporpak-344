@@ -15,7 +15,7 @@ class LaporanController extends Controller
         $success = $request->query('success');
         $errors = $request->query('errors');
 
-        return view('form_laporan', compact('success', 'errors'));
+        return view('profile.form_laporan', compact('success', 'errors'));
     }
 
     public function submitLaporan(Request $request)
@@ -65,7 +65,7 @@ class LaporanController extends Controller
                 ], 200);
             }
             // Jika submit biasa (non-AJAX)
-            return redirect()->route('form_laporan')->with('nomor_laporan', $nomor_laporan);
+            return redirect()->route('profile.form_laporan')->with('nomor_laporan', $nomor_laporan);
 
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, hapus file yang sudah diupload
@@ -77,7 +77,7 @@ class LaporanController extends Controller
                     'error' => $e->getMessage()
                 ], 500);
             }
-            return redirect()->route('form_laporan')->with('error', 'Gagal menyimpan laporan ke database: ' . $e->getMessage());
+            return redirect()->route('profile.form_laporan')->with('error', 'Gagal menyimpan laporan ke database: ' . $e->getMessage());
         }
     }
 

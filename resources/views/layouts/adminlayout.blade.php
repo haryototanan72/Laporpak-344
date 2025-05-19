@@ -136,7 +136,23 @@
         <li><a href="{{ route('admin.laporan.index') }}" class="{{ request()->routeIs('admin.laporan.index') ? 'active' : '' }}"><i class="bi bi-chat-left-text"></i> <span>Laporan</span></a></li>
         <li><a href="#"><i class="bi bi-chat-dots"></i> <span>Umpan Balik</span></a></li>
         <li><a href="{{ route('admin.user.index') }}" class="{{ request()->routeIs('admin.user.index') ? 'active' : '' }}"><i class="bi bi-people"></i> <span>Pengguna</span></a></li>
-        <li><a href="#"><i class="bi bi-person-badge"></i> <span>Petugas</span></a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle d-flex align-items-center {{ request()->routeIs('admin.petugas.*') || request()->routeIs('admin.petugas.laporan-tugas.*') ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false" onclick="event.preventDefault(); this.nextElementSibling.classList.toggle('show');">
+    <i class="bi bi-person-badge"></i> <span>Petugas</span>
+</a>
+          <ul class="dropdown-menu w-100" style="background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.07);border-radius:8px;">
+            <li>
+              <a class="dropdown-item {{ request()->routeIs('admin.petugas.*') ? 'active' : '' }}" href="{{ route('admin.petugas.index') }}">
+                <i class="bi bi-person-lines-fill"></i> Data Petugas
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item {{ request()->routeIs('admin.petugas.laporan-tugas.*') ? 'active' : '' }}" href="{{ route('admin.petugas.laporan-tugas.index') }}">
+                <i class="bi bi-clipboard-check"></i> Verifikasi Lapangan
+              </a>
+            </li>
+          </ul>
+        </li>
         <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="bi bi-power"></i> <span>Logout</span></a></li>
       </ul>
       <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
@@ -161,5 +177,6 @@
     </div>
   </div>
   @yield('scripts')
+  @stack('scripts')
 </body>
 </html>

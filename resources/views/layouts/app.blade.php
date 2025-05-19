@@ -28,17 +28,17 @@
     </head>
     <body class="font-sans antialiased">
         @auth
-            @if(auth()->user()->role === 'admin')
-                <!-- Admin Header -->
-                @include('layouts.navigation')
-            @else
-                <!-- User Header -->
-                @include('layouts.partials.user-header')
-            @endif
-        @else
-            <!-- Guest Header -->
-            @include('layouts.navigation')
-        @endauth
+    @if(auth()->user()->role === 'admin')
+        <!-- Admin Header -->
+        <!-- (Header untuk admin, jika ingin custom, tambahkan di sini) -->
+    @else
+        <!-- User Header -->
+        @include('layouts.partials.user-header')
+    @endif
+@else
+    <!-- Guest Header -->
+    <!-- (Header untuk guest, jika ingin custom, tambahkan di sini) -->
+@endauth
 
         <div class="min-h-screen bg-gray-50">
             <!-- Page Content -->

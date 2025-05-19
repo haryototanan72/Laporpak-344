@@ -67,7 +67,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.laporan.detail', $laporan->id) }}" class="btn btn-warning btn-sm text-white" style="background: #fbb03b; border: none; font-weight: 600;">
+                                        <a href="{{ route('admin.laporan.detail', $laporan->nomor_laporan) }}" class="btn btn-warning btn-sm text-white" style="background: #fbb03b; border: none; font-weight: 600;">
                                             Detail
                                         </a>
                                     </td>
